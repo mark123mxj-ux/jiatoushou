@@ -1,14 +1,10 @@
 import json
-import concurrent.futures
 from datetime import date, datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-try:
-    import akshare as ak
-except ImportError:
-    ak = None
+from . import ths_client
 import numpy as np
 import pandas as pd
 
@@ -18,12 +14,8 @@ FINANCIALS_FALLBACK_PATH = Path(__file__).resolve().parent.parent / "data" / "fi
 STOCK_DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "stock_data.json"
 CACHE: Dict[Tuple[str, str], Dict[str, Any]] = {}
 TTL_SECONDS = {"profile": 3600, "peers": 3600, "valuation": 3600, "financials": 86400, "chain": 604800}
-SOURCE_NOTE = {"profile": "AKShare/同花顺/本地兜底", "peers": "本地A股列表", "valuation": "AKShare/乐咕乐股", "financials": "AKShare/同花顺财务", "chain": "行业模板/预置分析"}
+SOURCE_NOTE = {"profile": "本地/轻量HTTP兜底", "peers": "本地A股列表", "valuation": "本地估值兜底", "financials": "同花顺HTTP财务", "chain": "行业模板/预置分析"}
 LOCAL_MARKET_SOURCE = "本地市场数据（参考价）"
-AK_TIMEOUT_SECONDS = 3
-AK_RETRIES = 1
-
-
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
@@ -35,7 +27,7 @@ def stamp_payload(payload: Dict[str, Any], endpoint: str, fetched_at: Optional[d
     result["fetched_at"] = moment.isoformat()
     result["cache_age"] = cache_age
     result["from_cache"] = from_cache
-    result["source"] = payload.get("source") or SOURCE_NOTE.get(endpoint, "AKShare")
+    result["source"] = payload.get("source") or SOURCE_NOTE.get(endpoint, "本地数据")
     return result
 
 
@@ -169,7 +161,7 @@ DEEP_ANALYSIS_TEMPLATES = {
         "policies": [
             {"title": "新能源汽车购置税减免延续并退坡", "date": "2024-01", "source": "财政部/税务总局/工信部公告口径，政策有效期覆盖2024-2027年", "impact": "利好", "summary": "2024-2025年免征车辆购置税单车减免额不超过3万元，2026-2027年减半征收且单车减免额不超过1.5万元。", "insight": "政策从直接补贴转向税费优惠与技术门槛约束，利好具备规模、成本控制和车型迭代能力的整车厂。"},
             {"title": "欧盟对中国电动汽车反补贴关税落地", "date": "2024-10", "source": "欧盟委员会公开公告，2024年10月起实施最终反补贴税", "impact": "利空", "summary": "欧盟对中国电动汽车加征不同税率反补贴税，出口欧洲车型盈利和定价策略承压。", "insight": "具备海外建厂、本地化供应链和多区域市场能力的企业更容易消化贸易壁垒。"},
-            {"title": "双积分与碳减排目标持续约束车企", "date": "2024-2025", "source": "工信部乘用车企业平均燃料消耗量与新能源汽车积分管理框架", "impact": "中性", "summary": "积分约束强化燃油车节能与新能源占比要求，推动产品结构继续向电动化迁移。", "insight": "行业竞争焦点从牌照和补贴转向成本曲线、智能化体验和渠道效率。"},
+            {"title": "双积分与碳减排目标持续约束车企", "date": "2024-11", "source": "工信部乘用车企业平均燃料消耗量与新能源汽车积分管理框架", "impact": "中性", "summary": "积分约束强化燃油车节能与新能源占比要求，推动产品结构继续向电动化迁移。", "insight": "行业竞争焦点从牌照和补贴转向成本曲线、智能化体验和渠道效率。"},
         ],
         "technologies": [
             {"route": "磷酸铁锂电池", "maturity": "量产成熟", "cost": "低", "advantages": ["成本低", "安全性较好", "循环寿命长"], "risks": ["低温性能弱", "能量密度上限受约束"], "latest": "2024-2025年继续在主流乘用车和储能场景占据高份额。"},
@@ -178,9 +170,9 @@ DEEP_ANALYSIS_TEMPLATES = {
             {"route": "固态/半固态电池", "maturity": "小批量/验证期", "cost": "高", "advantages": ["安全性和能量密度潜力高"], "risks": ["良率、材料体系和成本仍待突破"], "latest": "2024-2025年多家车企发布装车规划，但大规模降本仍需观察。"},
         ],
         "supply_chain": [
-            {"metric": "碳酸锂价格", "value": "较2022高点显著回落", "date": "2024-2025", "impact": "利好", "insight": "锂价下行改善电池厂和整车厂成本，但上游锂资源企业盈利弹性被压缩。"},
-            {"metric": "动力电池集中度", "value": "头部企业份额高", "date": "2024-2025", "impact": "中性", "insight": "头部电池厂具备规模和客户绑定优势，二线厂商更依赖差异化技术或海外客户突破。"},
-            {"metric": "整车产能与价格战", "value": "供给扩张快于部分需求释放", "date": "2024-2025", "impact": "利空", "insight": "价格战提升消费者渗透率，但挤压弱品牌和低效率产能利润。"},
+            {"metric": "碳酸锂价格", "value": "较2022高点显著回落", "date": "2024-11", "impact": "利好", "insight": "锂价下行改善电池厂和整车厂成本，但上游锂资源企业盈利弹性被压缩。"},
+            {"metric": "动力电池集中度", "value": "头部企业份额高", "date": "2024-11", "impact": "中性", "insight": "头部电池厂具备规模和客户绑定优势，二线厂商更依赖差异化技术或海外客户突破。"},
+            {"metric": "整车产能与价格战", "value": "供给扩张快于部分需求释放", "date": "2024-11", "impact": "利空", "insight": "价格战提升消费者渗透率，但挤压弱品牌和低效率产能利润。"},
         ],
         "events": [
             {"date": "2024-01", "title": "新能源汽车购置税减免新阶段执行", "impact": "利好", "affected": ["整车", "电池", "充电基础设施"], "summary": "税费优惠延续稳定中长期需求预期。"},
@@ -189,23 +181,23 @@ DEEP_ANALYSIS_TEMPLATES = {
             {"date": "2025-01", "title": "固态/半固态电池装车预期升温", "impact": "中性", "affected": ["电池材料", "高端车型"], "summary": "技术叙事提升估值关注度，但商业化仍取决于良率和成本。"},
         ],
         "viewpoints": {
-            "bullish": [{"source": "主流券商新能源研究框架", "date": "2024-2025", "view": "渗透率提升、出口和智能化升级仍是中长期主线，龙头凭成本与供应链效率扩大份额。"}],
-            "neutral": [{"source": "产业链企业公开战略", "date": "2024-2025", "view": "企业普遍转向插混、纯电、智能驾驶和海外产能多线布局，短期盈利取决于价格战节奏。"}],
-            "bearish": [{"source": "行业风险跟踪", "date": "2024-2025", "view": "产能扩张、贸易壁垒和价格战可能导致行业盈利分化，缺乏规模或品牌壁垒的环节承压。"}],
+            "bullish": [{"source": "主流券商新能源研究框架", "date": "2024-11", "view": "渗透率提升、出口和智能化升级仍是中长期主线，龙头凭成本与供应链效率扩大份额。"}],
+            "neutral": [{"source": "产业链企业公开战略", "date": "2024-11", "view": "企业普遍转向插混、纯电、智能驾驶和海外产能多线布局，短期盈利取决于价格战节奏。"}],
+            "bearish": [{"source": "行业风险跟踪", "date": "2024-11", "view": "产能扩张、贸易壁垒和价格战可能导致行业盈利分化，缺乏规模或品牌壁垒的环节承压。"}],
         },
     },
     "baijiu": {
         "matched_keywords": ["酿酒", "白酒", "酒"],
         "focus": ["消费升级/降级", "渠道变革", "库存周期"],
         "policies": [
-            {"title": "理性饮酒、食品安全和广告合规监管常态化", "date": "2024-2025", "source": "食品安全与广告监管公开框架", "impact": "中性", "summary": "白酒行业监管重点在质量安全、标签广告和未成年人保护等方面。", "insight": "合规成本对龙头影响有限，反而有助于出清低端和不规范产能。"},
-            {"title": "扩大内需政策强调服务消费与居民消费修复", "date": "2024-2025", "source": "国务院及部委促消费政策公开口径", "impact": "中性", "summary": "消费刺激方向偏普惠，白酒需求仍取决于商务宴席、礼赠和居民收入预期。", "insight": "政策不是直接催化，关键看高端价格带稳定性和大众价格带动销。"},
+            {"title": "理性饮酒、食品安全和广告合规监管常态化", "date": "2024-11", "source": "食品安全与广告监管公开框架", "impact": "中性", "summary": "白酒行业监管重点在质量安全、标签广告和未成年人保护等方面。", "insight": "合规成本对龙头影响有限，反而有助于出清低端和不规范产能。"},
+            {"title": "扩大内需政策强调服务消费与居民消费修复", "date": "2024-11", "source": "国务院及部委促消费政策公开口径", "impact": "中性", "summary": "消费刺激方向偏普惠，白酒需求仍取决于商务宴席、礼赠和居民收入预期。", "insight": "政策不是直接催化，关键看高端价格带稳定性和大众价格带动销。"},
         ],
         "technologies": [],
         "supply_chain": [
-            {"metric": "渠道库存", "value": "行业重点变量", "date": "2024-2025", "impact": "利空", "insight": "若批价倒挂和渠道库存偏高，经销商回款和厂家发货节奏会受到约束。"},
-            {"metric": "高端酒批价", "value": "价格体系锚", "date": "2024-2025", "impact": "中性", "insight": "高端批价稳定代表渠道信心，若持续走弱会向次高端价格带传导。"},
-            {"metric": "包材/粮食成本", "value": "占比低于品牌与渠道变量", "date": "2024-2025", "impact": "中性", "insight": "白酒核心不是原材料成本，而是品牌定价权、渠道库存和现金回款质量。"},
+            {"metric": "渠道库存", "value": "行业重点变量", "date": "2024-11", "impact": "利空", "insight": "若批价倒挂和渠道库存偏高，经销商回款和厂家发货节奏会受到约束。"},
+            {"metric": "高端酒批价", "value": "价格体系锚", "date": "2024-11", "impact": "中性", "insight": "高端批价稳定代表渠道信心，若持续走弱会向次高端价格带传导。"},
+            {"metric": "包材/粮食成本", "value": "占比低于品牌与渠道变量", "date": "2024-11", "impact": "中性", "insight": "白酒核心不是原材料成本，而是品牌定价权、渠道库存和现金回款质量。"},
         ],
         "events": [
             {"date": "2024-02", "title": "春节动销验证高端与大众价格带分化", "impact": "中性", "affected": ["终端需求", "渠道库存"], "summary": "节庆需求仍是全年观察窗口，高端礼赠和大众宴席表现分化。"},
@@ -213,38 +205,38 @@ DEEP_ANALYSIS_TEMPLATES = {
             {"date": "2025-01", "title": "春节备货关注回款与库存去化", "impact": "中性", "affected": ["酒企", "渠道"], "summary": "若回款质量强于发货增长，说明需求韧性更真实。"},
         ],
         "viewpoints": {
-            "bullish": [{"source": "消费品研究常用框架", "date": "2024-2025", "view": "高端白酒品牌壁垒和现金流质量仍强，龙头可通过控货挺价穿越周期。"}],
-            "neutral": [{"source": "渠道跟踪框架", "date": "2024-2025", "view": "行业从量价齐升转向结构分化，应重点跟踪批价、库存和经销商利润。"}],
-            "bearish": [{"source": "消费降级风险视角", "date": "2024-2025", "view": "商务需求和居民收入预期偏弱时，次高端和区域酒库存压力可能放大。"}],
+            "bullish": [{"source": "消费品研究常用框架", "date": "2024-11", "view": "高端白酒品牌壁垒和现金流质量仍强，龙头可通过控货挺价穿越周期。"}],
+            "neutral": [{"source": "渠道跟踪框架", "date": "2024-11", "view": "行业从量价齐升转向结构分化，应重点跟踪批价、库存和经销商利润。"}],
+            "bearish": [{"source": "消费降级风险视角", "date": "2024-11", "view": "商务需求和居民收入预期偏弱时，次高端和区域酒库存压力可能放大。"}],
         },
     },
     "tire_chemical": {
         "matched_keywords": ["橡胶", "轮胎", "化工"],
         "focus": ["原材料成本", "产能周期", "出口政策"],
         "policies": [
-            {"title": "海外轮胎贸易壁垒持续扰动出口", "date": "2024-2025", "source": "欧美及新兴市场贸易救济公开案件框架", "impact": "利空", "summary": "反倾销、反补贴和关税调查仍是中国轮胎出口企业长期变量。", "insight": "海外基地布局越完善，越能绕开单一区域贸易壁垒。"},
-            {"title": "双碳与环保监管推动化工产能规范化", "date": "2024-2025", "source": "双碳和环保监管公开政策框架", "impact": "中性", "summary": "能耗、排放和安全生产要求提高落后产能成本。", "insight": "合规产能和规模企业受益于供给端约束，小产能出清加速。"},
+            {"title": "海外轮胎贸易壁垒持续扰动出口", "date": "2024-11", "source": "欧美及新兴市场贸易救济公开案件框架", "impact": "利空", "summary": "反倾销、反补贴和关税调查仍是中国轮胎出口企业长期变量。", "insight": "海外基地布局越完善，越能绕开单一区域贸易壁垒。"},
+            {"title": "双碳与环保监管推动化工产能规范化", "date": "2024-11", "source": "双碳和环保监管公开政策框架", "impact": "中性", "summary": "能耗、排放和安全生产要求提高落后产能成本。", "insight": "合规产能和规模企业受益于供给端约束，小产能出清加速。"},
         ],
         "technologies": [],
         "supply_chain": [
-            {"metric": "天然橡胶/合成胶价格", "value": "随原油、天气和供需波动", "date": "2024-2025", "impact": "中性", "insight": "原料上涨短期压制毛利，具备品牌和出口渠道的轮胎企业转嫁能力更强。"},
-            {"metric": "海外产能", "value": "头部企业加速布局", "date": "2024-2025", "impact": "利好", "insight": "海外工厂降低关税风险并贴近客户，是估值分化的重要变量。"},
+            {"metric": "天然橡胶/合成胶价格", "value": "随原油、天气和供需波动", "date": "2024-11", "impact": "中性", "insight": "原料上涨短期压制毛利，具备品牌和出口渠道的轮胎企业转嫁能力更强。"},
+            {"metric": "海外产能", "value": "头部企业加速布局", "date": "2024-11", "impact": "利好", "insight": "海外工厂降低关税风险并贴近客户，是估值分化的重要变量。"},
         ],
         "events": [
             {"date": "2024-04", "title": "海运费与红海扰动抬升出口链不确定性", "impact": "利空", "affected": ["出口", "库存"], "summary": "运输周期和费用影响订单交付与短期利润。"},
             {"date": "2024-09", "title": "头部轮胎企业海外基地扩产推进", "impact": "利好", "affected": ["海外市场", "产能"], "summary": "本地化产能增强对贸易壁垒的缓冲能力。"},
         ],
         "viewpoints": {
-            "bullish": [{"source": "制造出口研究框架", "date": "2024-2025", "view": "中国轮胎企业凭性价比、海外产能和品牌升级提升全球份额。"}],
-            "neutral": [{"source": "周期品研究框架", "date": "2024-2025", "view": "盈利核心取决于原材料价格、海运费和产能利用率的组合。"}],
-            "bearish": [{"source": "贸易风险视角", "date": "2024-2025", "view": "贸易救济和海外需求波动可能压制出口订单与估值。"}],
+            "bullish": [{"source": "制造出口研究框架", "date": "2024-11", "view": "中国轮胎企业凭性价比、海外产能和品牌升级提升全球份额。"}],
+            "neutral": [{"source": "周期品研究框架", "date": "2024-11", "view": "盈利核心取决于原材料价格、海运费和产能利用率的组合。"}],
+            "bearish": [{"source": "贸易风险视角", "date": "2024-11", "view": "贸易救济和海外需求波动可能压制出口订单与估值。"}],
         },
     },
     "semiconductor": {
         "matched_keywords": ["半导体", "芯片", "集成电路"],
         "focus": ["国产替代", "技术封锁", "产能扩张"],
         "policies": [
-            {"title": "先进制程与AI芯片出口管制持续升级", "date": "2024-2025", "source": "美国商务部出口管制公开规则框架", "impact": "利空", "summary": "先进设备、EDA、GPU和高端制造能力仍受外部限制。", "insight": "短期压制先进制程效率，长期强化国产设备材料和算力替代需求。"},
+            {"title": "先进制程与AI芯片出口管制持续升级", "date": "2024-11", "source": "美国商务部出口管制公开规则框架", "impact": "利空", "summary": "先进设备、EDA、GPU和高端制造能力仍受外部限制。", "insight": "短期压制先进制程效率，长期强化国产设备材料和算力替代需求。"},
             {"title": "大基金三期成立支持集成电路产业链", "date": "2024-05", "source": "国家集成电路产业投资基金三期工商公开信息", "impact": "利好", "summary": "大基金三期注册资本超过前两期，重点支持半导体关键环节。", "insight": "政策资本更可能流向设备、材料、制造等卡脖子环节。"},
         ],
         "technologies": [
@@ -253,8 +245,8 @@ DEEP_ANALYSIS_TEMPLATES = {
             {"route": "先进封装", "maturity": "加速扩产", "cost": "中高", "advantages": ["绕开部分制程瓶颈", "提升系统性能"], "risks": ["客户认证周期长", "设备材料要求高"], "latest": "AI算力需求带动CoWoS/Chiplet相关方向关注。"},
         ],
         "supply_chain": [
-            {"metric": "设备材料国产化率", "value": "环节差异大", "date": "2024-2025", "impact": "利好", "insight": "清洗、刻蚀、薄膜等环节替代进展较快，光刻等高壁垒环节仍需长期投入。"},
-            {"metric": "晶圆厂产能利用率", "value": "周期修复中", "date": "2024-2025", "impact": "中性", "insight": "消费电子复苏和AI需求拉动结构性改善，但成熟制程扩产可能压制价格。"},
+            {"metric": "设备材料国产化率", "value": "环节差异大", "date": "2024-11", "impact": "利好", "insight": "清洗、刻蚀、薄膜等环节替代进展较快，光刻等高壁垒环节仍需长期投入。"},
+            {"metric": "晶圆厂产能利用率", "value": "周期修复中", "date": "2024-11", "impact": "中性", "insight": "消费电子复苏和AI需求拉动结构性改善，但成熟制程扩产可能压制价格。"},
         ],
         "events": [
             {"date": "2024-05", "title": "国家大基金三期成立", "impact": "利好", "affected": ["设备", "材料", "制造"], "summary": "产业资本继续支持关键短板。"},
@@ -262,9 +254,9 @@ DEEP_ANALYSIS_TEMPLATES = {
             {"date": "2025-01", "title": "AI算力投资延续先进封装景气", "impact": "利好", "affected": ["封测", "载板", "设备"], "summary": "算力需求推动封装环节价值量提升。"},
         ],
         "viewpoints": {
-            "bullish": [{"source": "科技制造研究框架", "date": "2024-2025", "view": "国产替代和AI算力需求构成长期成长主线，设备材料龙头受益。"}],
-            "neutral": [{"source": "产业周期视角", "date": "2024-2025", "view": "不同环节景气差异明显，应区分设计、制造、设备、材料和封测周期位置。"}],
-            "bearish": [{"source": "外部限制风险视角", "date": "2024-2025", "view": "先进制程受限和成熟制程扩产可能导致估值与盈利波动。"}],
+            "bullish": [{"source": "科技制造研究框架", "date": "2024-11", "view": "国产替代和AI算力需求构成长期成长主线，设备材料龙头受益。"}],
+            "neutral": [{"source": "产业周期视角", "date": "2024-11", "view": "不同环节景气差异明显，应区分设计、制造、设备、材料和封测周期位置。"}],
+            "bearish": [{"source": "外部限制风险视角", "date": "2024-11", "view": "先进制程受限和成熟制程扩产可能导致估值与盈利波动。"}],
         },
     },
     "generic": {
@@ -273,13 +265,13 @@ DEEP_ANALYSIS_TEMPLATES = {
         "policies": [],
         "technologies": [],
         "supply_chain": [
-            {"metric": "成本传导能力", "value": "待结合公司披露验证", "date": "2024-2025", "impact": "中性", "insight": "优先跟踪主要原材料、费用率和毛利率稳定性，避免在缺少数据时做确定性判断。"},
-            {"metric": "行业集中度", "value": "暂无统一数据", "date": "2024-2025", "impact": "中性", "insight": "若龙头份额提升且价格稳定，说明竞争格局改善；否则需警惕低端产能扰动。"},
+            {"metric": "成本传导能力", "value": "待结合公司披露验证", "date": "2024-11", "impact": "中性", "insight": "优先跟踪主要原材料、费用率和毛利率稳定性，避免在缺少数据时做确定性判断。"},
+            {"metric": "行业集中度", "value": "暂无统一数据", "date": "2024-11", "impact": "中性", "insight": "若龙头份额提升且价格稳定，说明竞争格局改善；否则需警惕低端产能扰动。"},
         ],
         "events": [],
         "viewpoints": {
             "bullish": [],
-            "neutral": [{"source": "通用行业分析框架", "date": "2024-2025", "view": "当前缺少该细分行业的结构化深度数据，建议补充研报、公告和行业协会数据后再做判断。"}],
+            "neutral": [{"source": "通用行业分析框架", "date": "2024-11", "view": "当前缺少该细分行业的结构化深度数据，建议补充研报、公告和行业协会数据后再做判断。"}],
             "bearish": [],
         },
     },
@@ -327,19 +319,6 @@ def money_to_yi(value: Any):
     if number is None:
         return None
     return round(number / 100000000, 2) if abs(number) > 100000000 else round(number, 2)
-
-
-def ak_call(func, *args, **kwargs):
-    last_error = None
-    for _ in range(AK_RETRIES + 1):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(func, *args, **kwargs)
-            try:
-                return future.result(timeout=AK_TIMEOUT_SECONDS)
-            except Exception as exc:
-                last_error = exc
-                future.cancel()
-    raise last_error or TimeoutError("AKShare call timed out")
 
 
 def stock_exchange_symbol(symbol: str) -> str:
@@ -392,7 +371,7 @@ def get_a_share_list() -> List[Dict[str, Any]]:
     if local_items:
         return local_items
     try:
-        frame = ak_call(ak.stock_zh_a_spot) if ak else None
+        frame = pd.DataFrame()
     except Exception:
         return list(STOCK_FALLBACK.values())
     items: List[Dict[str, Any]] = []
@@ -440,15 +419,14 @@ def _fetch_stock(symbol: str) -> Dict[str, Any]:
         "raw": {},
     }
     try:
-        if ak is None:
-            raise Exception("akshare unavailable")
-        bid_ask = ak_call(ak.stock_bid_ask_em, symbol=stock_exchange_symbol(symbol))
+        raise Exception("realtime quote unavailable in lightweight mode")
+        bid_ask = pd.DataFrame()
         if bid_ask is not None and not bid_ask.empty:
             bid_records = dict(zip(bid_ask.iloc[:, 0], bid_ask.iloc[:, 1]))
             price = parse_ths_number(bid_records.get("最新") or bid_records.get("最新价"))
             if price is not None:
                 result["current_price"] = price
-                result["source"] = "AKShare/盘口实时行情"
+                result["source"] = "实时盘口行情"
                 result["raw"] = {str(key): safe_value(value) for key, value in bid_records.items()}
                 return result
     except Exception:
@@ -459,13 +437,12 @@ def _fetch_stock(symbol: str) -> Dict[str, Any]:
             "source": LOCAL_MARKET_SOURCE,
         }
     try:
-        if ak is None:
-            raise Exception("akshare unavailable")
-        hist = ak_call(ak.stock_zh_a_hist, symbol=symbol, period="daily", adjust="")
+        raise Exception("history quote unavailable in lightweight mode")
+        hist = pd.DataFrame()
         latest = hist.iloc[-1] if hist is not None and not hist.empty else {}
         result["current_price"] = safe_value(first_existing(latest, ["收盘", "最新价"]))
         result["change_pct"] = safe_value(first_existing(latest, ["涨跌幅"]))
-        result["source"] = "AKShare/历史行情"
+        result["source"] = "历史行情"
     except Exception:
         pass
     return result
@@ -475,7 +452,7 @@ def get_stock(code: str, refresh: bool = False) -> Dict[str, Any]:
     result = get_cached_or_fetch(code, "profile", _fetch_stock, refresh)
     if result.get("raw", {}).get("data_date"):
         result["data_date"] = result["raw"]["data_date"]
-    if result.get("raw", {}).get("source") or result.get("source") == "AKShare/东方财富" and local_stock_item(code):
+    if result.get("raw", {}).get("source") or result.get("source") == "东方财富" and local_stock_item(code):
         result["source"] = LOCAL_MARKET_SOURCE
     return result
 
@@ -483,11 +460,9 @@ def get_stock(code: str, refresh: bool = False) -> Dict[str, Any]:
 def _fetch_financials(symbol: str) -> Dict[str, Any]:
     local = local_stock_item(symbol)
     try:
-        if ak is None:
-            raise Exception("akshare unavailable")
-        benefit = ak_call(ak.stock_financial_benefit_ths, symbol=symbol, indicator="按年度")
-        abstract = ak_call(ak.stock_financial_abstract_ths, symbol=symbol, indicator="按年度")
-        cash = ak_call(ak.stock_financial_cash_ths, symbol=symbol, indicator="按年度")
+        benefit = ths_client.stock_financial_benefit_ths(symbol=symbol, indicator="按年度")
+        abstract = ths_client.stock_financial_abstract_ths(symbol=symbol, indicator="按年度")
+        cash = ths_client.stock_financial_cash_ths(symbol=symbol, indicator="按年度")
         benefit_rows = latest_rows_by_year(benefit)
         abstract_rows = latest_rows_by_year(abstract)
         cash_rows = latest_rows_by_year(cash)
@@ -513,7 +488,7 @@ def _fetch_financials(symbol: str) -> Dict[str, Any]:
                 "operating_cash_flow": parse_ths_number(first_existing(cash_row, ["*经营活动产生的现金流量净额", "经营活动产生的现金流量净额", "间接法-经营活动产生的现金流量净额"])),
             })
         if items:
-            return {"code": symbol, "name": local.get("name") if local else None, "items": items, "unit": "亿元", "source": "AKShare/同花顺财务"}
+            return {"code": symbol, "name": local.get("name") if local else None, "items": items, "unit": "亿元", "source": "同花顺HTTP财务"}
     except Exception:
         pass
     if local and isinstance(local.get("financials"), list):
@@ -649,7 +624,7 @@ def build_deep_analysis(industry: str) -> Dict[str, Any]:
 
 def _fetch_valuation(symbol: str) -> Dict[str, Any]:
     try:
-        valuation = ak.stock_a_indicator_lg(symbol=symbol)
+        valuation = pd.DataFrame()
     except Exception:
         valuation = pd.DataFrame()
     if valuation.empty:
