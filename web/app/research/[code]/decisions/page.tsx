@@ -1,0 +1,43 @@
+"use client";
+
+import { LearningGuide } from "@/components/LearningGuide";
+import { ResearchNav } from "@/components/ResearchNav";
+import { dataBaseUrl } from "@/lib/api";
+import { Decision, decisionsKey, loadJson, markProgress, saveJson, stockNames, thesisKey, thesisOptions, type Thesis } from "@/lib/researchStore";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+
+const actions: Decision["action"][] = ["买入", "卖出", "加仓", "减仓"];
+const emotions: { value: Decision["emotion"]; icon: string }[] = [{ value: "贪婪", icon: "🔥" }, { value: "恐惧", icon: "🧊" }, { value: "理性", icon: "⚖️" }, { value: "犹豫", icon: "🌫️" }];
+type Trade = { id: number; date: string; stock_code: string; stock_name: string; action: "buy" | "sell"; price: number; shares: number; amount: number; note?: string };
+
+export default function DecisionsPage({ params }: { params: { code: string } }) {
+  const key = decisionsKey(params.code);
+  const [records, setRecords] = useState<Decision[]>([]);
+  const [thesis, setThesis] = useState<Thesis | null>(null);
+  const [trades, setTrades] = useState<Trade[]>([]);
+  const [form, setForm] = useState({ action: "买入" as Decision["action"], thesisRef: "", emotion: "理性" as Decision["emotion"], date: new Date().toISOString().slice(0, 10), price: "", quantity: "", note: "" });
+
+  useEffect(() => {
+    markProgress(params.code, "decisions");
+    setRecords(loadJson<Decision[]>(key, []));
+    setThesis(loadJson<Thesis | null>(thesisKey(params.code), null));
+    fetch(`${dataBaseUrl}/api/portfolio/trades`).then((response) => response.ok ? response.json() : null).then((payload) => setTrades((payload?.trades ?? []).filter((item: Trade) => item.stock_code === params.code))).catch(() => setTrades([]));
+  }, [key, params.code]);
+
+  const options = useMemo(() => thesisOptions(thesis), [thesis]);
+  const amount = Number(form.price || 0) * Number(form.quantity || 0);
+
+  function submit() {
+    const payload: Decision = { id: crypto.randomUUID(), code: params.code, action: form.action, thesisRef: form.thesisRef || options[0], emotion: form.emotion, date: form.date, price: Number(form.price), quantity: Number(form.quantity), amount, note: form.note, createdAt: new Date().toLocaleString("zh-CN") };
+    const next = [payload, ...records];
+    setRecords(next);
+    saveJson(key, next);
+    setForm((current) => ({ ...current, price: "", quantity: "", note: "" }));
+  }
+
+  return <section className="space-y-5"><LearningGuide module="decisions" /><ResearchNav code={params.code} current="decisions" /><div className="relative overflow-hidden border border-line bg-carbon/90 p-6"><div className="absolute right-8 top-0 h-36 w-36 rounded-full bg-amber/15 blur-3xl" /><div className="font-mono text-xs uppercase tracking-[0.32em] text-cyan">Decision Ledger / {params.code}</div><div className="mt-3 flex flex-col justify-between gap-4 lg:flex-row lg:items-end"><div><h1 className="font-display text-5xl text-slate-100">{stockNames[params.code] ?? params.code} · 决策日志</h1><p className="mt-2 text-sm text-slate-400">把每一次买卖的理由、价格和情绪锁定在时间线上。</p></div><Link href={`/research/${params.code}/review`} className="border border-amber/60 bg-amber/10 px-4 py-3 font-mono text-xs text-amber transition hover:bg-amber/20">进入复盘 →</Link></div></div><div className="grid gap-5 xl:grid-cols-[410px_1fr]"><div className="border border-line bg-panel/85 p-5"><div className="font-mono text-xs uppercase tracking-[0.25em] text-cyan">New record</div><h2 className="mt-2 font-display text-3xl text-slate-100">记录一笔操作</h2><div className="mt-5 space-y-4"><Field label="操作"><select value={form.action} onChange={(e) => setForm({ ...form, action: e.target.value as Decision["action"] })} className="input-terminal">{actions.map((item) => <option key={item}>{item}</option>)}</select></Field><Field label="关联论点"><select value={form.thesisRef} onChange={(e) => setForm({ ...form, thesisRef: e.target.value })} className="input-terminal">{options.map((item) => <option key={item}>{item}</option>)}</select></Field><div><div className="font-mono text-xs text-slate-500">情绪状态</div><div className="mt-2 grid grid-cols-4 gap-2">{emotions.map((item) => <button key={item.value} onClick={() => setForm({ ...form, emotion: item.value })} className={`border px-2 py-3 text-sm transition ${form.emotion === item.value ? "border-amber/60 bg-amber/15 text-amber" : "border-line text-slate-400 hover:border-cyan/50"}`}>{item.icon}<div className="mt-1 font-mono text-[11px]">{item.value}</div></button>)}</div></div><div className="grid grid-cols-3 gap-3"><Input label="日期" type="date" value={form.date} onChange={(v) => setForm({ ...form, date: v })} /><Input label="价格" value={form.price} onChange={(v) => setForm({ ...form, price: v })} /><Input label="数量" value={form.quantity} onChange={(v) => setForm({ ...form, quantity: v })} /></div><div className="border border-amber/30 bg-amber/10 p-3 font-mono text-sm text-amber">金额：¥{amount.toLocaleString("zh-CN")}</div><textarea value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder="当时看见了什么？担心什么？" className="min-h-24 w-full border border-line bg-carbon/80 px-3 py-3 text-sm text-slate-200 outline-none placeholder:text-slate-600 focus:border-cyan" /><button onClick={submit} disabled={!form.price || !form.quantity} className="w-full border border-amber/60 bg-amber/15 px-5 py-3 font-mono text-xs text-amber transition hover:bg-amber/25 disabled:opacity-40">保存到日志</button></div></div><div className="grid gap-5"><div className="overflow-x-auto border border-line bg-carbon/85"><table className="w-full min-w-[840px] font-mono text-xs"><thead className="bg-panel text-slate-500"><tr>{["日期", "操作", "价格", "数量", "金额", "情绪", "论点"].map((h) => <th key={h} className="border-b border-line px-3 py-3 text-left">{h}</th>)}</tr></thead><tbody>{records.map((item) => <tr key={item.id} className="border-b border-line/70 text-slate-300 transition hover:bg-panel/60"><td className="px-3 py-3">{item.date}</td><td className="px-3 py-3 text-amber">{item.action}</td><td className="px-3 py-3">{item.price}</td><td className="px-3 py-3">{item.quantity}</td><td className="px-3 py-3">¥{item.amount.toLocaleString("zh-CN")}</td><td className="px-3 py-3">{emotions.find((e) => e.value === item.emotion)?.icon} {item.emotion}</td><td className="px-3 py-3 text-slate-500">{item.thesisRef}</td></tr>)}</tbody></table></div><div className="border border-line bg-panel/85 p-5"><h2 className="font-display text-3xl text-slate-100">相关真实交易</h2><div className="mt-4 space-y-3">{trades.length ? trades.map((item) => <div key={item.id} className="glass-card p-3"><div className="flex justify-between gap-3"><div className="font-mono text-xs text-cyan">{item.date} · {item.action === "buy" ? "买入" : "卖出"}</div><div className={item.action === "buy" ? "text-emerald-300" : "text-rose-300"}>¥{item.amount.toLocaleString("zh-CN")}</div></div><div className="mt-1 text-sm text-slate-300">{item.stock_name} {item.price} × {item.shares}</div><div className="mt-1 text-xs text-slate-500">{item.note || "用于对照当初为什么买/卖"}</div></div>) : <div className="text-sm text-slate-500">该股票暂无导入交易记录。可从持仓页导入成交历史。</div>}</div></div><div className="border border-line bg-panel/85 p-5"><h2 className="font-display text-3xl text-slate-100">时间线</h2><div className="mt-5 space-y-4">{records.length ? records.map((item) => <div key={item.id} className="relative border-l border-cyan/40 pl-5"><div className="absolute -left-1.5 top-1 h-3 w-3 rounded-full bg-amber shadow-[0_0_18px_rgba(214,160,75,.8)]" /><div className="font-mono text-xs text-cyan">{item.date} · {item.createdAt}</div><div className="mt-1 text-sm text-slate-200">基于「{item.thesisRef}」{item.action} {item.quantity} 股，成交价 {item.price}</div><div className="mt-1 text-xs text-slate-500">{item.note || "未填写备注"}</div></div>) : <div className="text-sm text-slate-500">尚无日志，先记录第一笔决策。</div>}</div></div></div></div></section>;
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) { return <label className="block"><span className="font-mono text-xs text-slate-500">{label}</span><div className="mt-1">{children}</div></label>; }
+function Input({ label, value, onChange, type = "number" }: { label: string; value: string; onChange: (value: string) => void; type?: string }) { return <label className="block"><span className="font-mono text-xs text-slate-500">{label}</span><input type={type} value={value} onChange={(e) => onChange(e.target.value)} className="mt-1 w-full border border-line bg-carbon/80 px-3 py-2 font-mono text-sm text-slate-200 outline-none focus:border-cyan" /></label>; }

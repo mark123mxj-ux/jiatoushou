@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+.next/
+.vercel/
+.railway/
+.env
+.env.*
+*.py[cod]
+.venv/
+venv/
+data-service/data/portfolio.json
+data-service/data/trades.json

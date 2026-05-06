@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(214, 160, 75, 0.16), transparent 34%),
+    radial-gradient(circle at 85% 12%, rgba(76, 201, 216, 0.12), transparent 28%),
+    #080b0f;
+  color: #e8edf2;
+}
+
+.market-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.profit-slider {
+  appearance: none;
+  height: 0.45rem;
+  cursor: pointer;
+  border-radius: 999px;
+  border: 1px solid rgba(76, 201, 216, 0.22);
+  background:
+    linear-gradient(90deg, rgba(76, 201, 216, 0.75), rgba(214, 160, 75, 0.78)),
+    #10151c;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.45);
+}
+
+.profit-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 999px;
+  border: 2px solid #080b0f;
+  background: #d6a04b;
+  box-shadow: 0 0 0 4px rgba(214, 160, 75, 0.18), 0 0 22px rgba(214, 160, 75, 0.55);
+}
+
+.profit-slider::-moz-range-thumb {
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 999px;
+  border: 2px solid #080b0f;
+  background: #d6a04b;
+  box-shadow: 0 0 0 4px rgba(214, 160, 75, 0.18), 0 0 22px rgba(214, 160, 75, 0.55);
+}
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  opacity: 0.13;
+  mix-blend-mode: overlay;
+  background-image:
+    radial-gradient(circle at 25% 18%, rgba(255, 255, 255, 0.78) 0 0.7px, transparent 0.8px),
+    radial-gradient(circle at 70% 62%, rgba(255, 255, 255, 0.52) 0 0.6px, transparent 0.7px);
+  background-size: 3px 3px, 5px 5px;
+}
+
+::selection { background: rgba(214, 160, 75, 0.35); color: #fff7ed; }
+
+.premium-panel,
+.glass-card {
+  position: relative;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.018)), rgba(16,21,28,.72);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 -24px 50px rgba(0,0,0,.26), 0 24px 70px rgba(0,0,0,.24);
+  backdrop-filter: blur(18px);
+}
+
+.premium-panel::before,
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(214,160,75,.32), transparent 28%, rgba(76,201,216,.26) 66%, transparent), radial-gradient(circle at 12% 0%, rgba(214,160,75,.12), transparent 32%);
+  opacity: .55;
+}
+
+.metal-text {
+  background: linear-gradient(110deg, #87909c 0%, #f8fafc 38%, #d6a04b 68%, #fff7ed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 34px rgba(214,160,75,.09);
+}
+
+.data-figure { font-family: var(--font-mono), monospace; font-variant-numeric: tabular-nums; letter-spacing: -.04em; }
+
+.glow-hover { position: relative; overflow: hidden; }
+.glow-hover::after { content: ""; position: absolute; inset: -45%; opacity: 0; background: radial-gradient(circle, rgba(214,160,75,.2), transparent 42%); transform: scale(.72); transition: opacity 260ms ease, transform 260ms ease; }
+.glow-hover:hover::after { opacity: 1; transform: scale(1); }
+
+.hero-orb { animation: drift-orb 10s ease-in-out infinite alternate; }
+.shimmer { background-image: linear-gradient(100deg, currentColor 0%, #fff7d6 42%, currentColor 72%); background-size: 240% 100%; -webkit-background-clip: text; background-clip: text; animation: text-shimmer 2.4s ease-out .25s both; }
+
+@keyframes drift-orb { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-34px,28px,0) scale(1.18); } }
+@keyframes text-shimmer { from { background-position: 160% 0; } to { background-position: -80% 0; } }
+
+.chain-edge .react-flow__edge-path { stroke: url(#chainGradient); stroke-width: 2.2; filter: drop-shadow(0 0 7px rgba(76,201,216,.32)); }
+.react-flow__node:hover { filter: drop-shadow(0 0 24px rgba(76,201,216,.2)); }
+
+@keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.input-terminal { border: 1px solid rgba(148, 163, 184, 0.18); background: rgba(8, 11, 15, 0.82); padding: 0.55rem 0.7rem; color: #e2e8f0; outline: none; }
+.input-terminal:focus { border-color: rgba(76, 201, 216, 0.85); box-shadow: 0 0 0 1px rgba(76, 201, 216, 0.22); }

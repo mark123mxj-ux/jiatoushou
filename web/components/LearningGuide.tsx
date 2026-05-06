@@ -1,0 +1,28 @@
+"use client";
+
+import { useState } from "react";
+import type { ModuleKey } from "@/lib/researchStore";
+
+type Resource = { title: string; url: string };
+
+const guides: Record<ModuleKey, { why: string; videos: Resource[]; books: Resource[] }> = {
+  industry: { why: "先确认池塘是否足够深，避免在衰退行业里寻找廉价陷阱。", videos: [{ title: "唐朝·手把手教你读财报 系列", url: "https://search.bilibili.com/all?keyword=%E5%94%90%E6%9C%9D+%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E8%AF%BB%E8%B4%A2%E6%8A%A5" }, { title: "小Lin说·行业科普 主页", url: "https://space.bilibili.com/520819684" }, { title: "巴菲特·选择好行业 搜索", url: "https://search.bilibili.com/all?keyword=%E5%B7%B4%E8%8F%B2%E7%89%B9+%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E8%A1%8C%E4%B8%9A" }], books: [{ title: "《手把手教你读财报》唐朝", url: "https://book.douban.com/subject/26390630/" }, { title: "《竞争战略》迈克尔·波特", url: "https://book.douban.com/subject/1435909/" }] },
+  chain: { why: "把利润池拆到上下游，才能看清谁拥有定价权、谁承担波动。", videos: [{ title: "巫师财经·产业链解析 搜索", url: "https://search.bilibili.com/all?keyword=%E5%B7%AB%E5%B8%88%E8%B4%A2%E7%BB%8F+%E4%BA%A7%E4%B8%9A%E9%93%BE" }, { title: "远川研究所·制造业产业链 搜索", url: "https://search.bilibili.com/all?keyword=%E8%BF%9C%E5%B7%9D%E7%A0%94%E7%A9%B6%E6%89%80+%E5%88%B6%E9%80%A0%E4%B8%9A+%E4%BA%A7%E4%B8%9A%E9%93%BE" }], books: [{ title: "《竞争优势》迈克尔·波特", url: "https://book.douban.com/subject/1058576/" }, { title: "《隐形冠军》赫尔曼·西蒙", url: "https://book.douban.com/subject/26894224/" }] },
+  drivers: { why: "把故事变成变量，测试利润对价格、销量、成本和费用的真实弹性。", videos: [{ title: "唐朝·利润表拆解 搜索", url: "https://search.bilibili.com/all?keyword=%E5%94%90%E6%9C%9D+%E5%88%A9%E6%B6%A6%E8%A1%A8+%E6%8B%86%E8%A7%A3" }, { title: "肖星·财务分析与决策 搜索", url: "https://search.bilibili.com/all?keyword=%E8%82%96%E6%98%9F+%E8%B4%A2%E5%8A%A1%E5%88%86%E6%9E%90%E4%B8%8E%E5%86%B3%E7%AD%96" }], books: [{ title: "《估值的艺术》尼古拉斯·史密斯", url: "https://book.douban.com/subject/26838689/" }, { title: "《财务报表分析与证券估值》Stephen Penman", url: "https://book.douban.com/subject/25783886/" }] },
+  thesis: { why: "买入前写下可证伪论点，防止事后为价格波动补编理由。", videos: [{ title: "芒格·多元思维模型 搜索", url: "https://search.bilibili.com/all?keyword=%E8%8A%92%E6%A0%BC+%E5%A4%9A%E5%85%83%E6%80%9D%E7%BB%B4%E6%A8%A1%E5%9E%8B" }, { title: "李录·价值投资 搜索", url: "https://search.bilibili.com/all?keyword=%E6%9D%8E%E5%BD%95+%E4%BB%B7%E5%80%BC%E6%8A%95%E8%B5%84" }], books: [{ title: "《穷查理宝典》查理·芒格", url: "https://book.douban.com/subject/35558882/" }, { title: "《投资最重要的事》霍华德·马克斯", url: "https://book.douban.com/subject/10799082/" }] },
+  decisions: { why: "记录当时的事实、情绪和依据，让未来复盘有证据而非凭印象。", videos: [{ title: "塔勒布·反脆弱 搜索", url: "https://search.bilibili.com/all?keyword=%E5%A1%94%E5%8B%92%E5%B8%83+%E5%8F%8D%E8%84%86%E5%BC%B1" }, { title: "达利欧·原则决策 搜索", url: "https://search.bilibili.com/all?keyword=%E8%BE%BE%E5%88%A9%E6%AC%A7+%E5%8E%9F%E5%88%99+%E5%86%B3%E7%AD%96" }], books: [{ title: "《对赌》Annie Duke", url: "https://book.douban.com/subject/30242529/" }, { title: "《思考，快与慢》丹尼尔·卡尼曼", url: "https://book.douban.com/subject/10785583/" }] },
+  review: { why: "把结果和逻辑分开评分，训练可复制的判断力而不是追逐单次盈亏。", videos: [{ title: "塔勒布·反脆弱 搜索", url: "https://search.bilibili.com/all?keyword=%E5%A1%94%E5%8B%92%E5%B8%83+%E5%8F%8D%E8%84%86%E5%BC%B1" }, { title: "达利欧·原则决策 搜索", url: "https://search.bilibili.com/all?keyword=%E8%BE%BE%E5%88%A9%E6%AC%A7+%E5%8E%9F%E5%88%99+%E5%86%B3%E7%AD%96" }], books: [{ title: "《对赌》Annie Duke", url: "https://book.douban.com/subject/30242529/" }, { title: "《思考，快与慢》丹尼尔·卡尼曼", url: "https://book.douban.com/subject/10785583/" }] }
+};
+
+export function LearningGuide({ module }: { module: ModuleKey }) {
+  const [open, setOpen] = useState(true);
+  const guide = guides[module];
+  return <div className="premium-panel relative overflow-hidden p-0 transition-all duration-500"><button onClick={() => setOpen(!open)} className="glow-hover flex w-full items-center justify-between px-5 py-3 text-left"><span className="font-mono text-xs uppercase tracking-[0.28em] text-amber">Why this step</span><span className="font-mono text-xs text-cyan">{open ? "收起" : "展开"}</span></button><div className={`grid transition-all duration-500 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}><div className="overflow-hidden px-5 pb-5"><p className="text-sm leading-6 text-slate-300">{guide.why}</p><div className="mt-4 grid gap-3 md:grid-cols-2"><div><div className="font-mono text-[11px] text-cyan">推荐视频</div><div className="mt-2 flex flex-wrap gap-2">{guide.videos.map((item) => <ResourceLink key={item.url} item={item} icon="▶" tone="video" />)}</div></div><div><div className="font-mono text-[11px] text-cyan">书籍</div><div className="mt-2 flex flex-wrap gap-2">{guide.books.map((item) => <ResourceLink key={item.url} item={item} icon="▣" tone="book" />)}</div></div></div></div></div></div>;
+}
+
+function ResourceLink({ item, icon, tone }: { item: Resource; icon: string; tone: "video" | "book" }) {
+  const className = tone === "video"
+    ? "border-cyan/25 bg-cyan/10 text-cyan hover:border-cyan/60 hover:text-cyan hover:shadow-[0_0_18px_rgba(76,201,216,.22)]"
+    : "border-amber/25 bg-amber/10 text-amber hover:border-amber/60 hover:text-amber hover:shadow-[0_0_18px_rgba(214,160,75,.25)]";
+  return <a href={item.url} target="_blank" rel="noreferrer" className={`group inline-flex items-center gap-1.5 border px-2 py-1 text-xs transition ${className} hover:underline hover:underline-offset-4`}><span className="font-mono text-[10px] opacity-80 transition group-hover:opacity-100">{icon}</span><span>{item.title}</span></a>;
+}
