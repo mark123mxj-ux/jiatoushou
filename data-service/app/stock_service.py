@@ -1,18 +1,27 @@
 import json
+import concurrent.futures
 from datetime import date, datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-import akshare as ak
+try:
+    import akshare as ak
+except ImportError:
+    ak = None
 import numpy as np
 import pandas as pd
 
 DATA_DATE = date.today().isoformat()
 A_SHARE_LIST_PATH = Path(__file__).resolve().parent.parent / "data" / "a_share_list.json"
+FINANCIALS_FALLBACK_PATH = Path(__file__).resolve().parent.parent / "data" / "financials_fallback.json"
+STOCK_DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "stock_data.json"
 CACHE: Dict[Tuple[str, str], Dict[str, Any]] = {}
 TTL_SECONDS = {"profile": 3600, "peers": 3600, "valuation": 3600, "financials": 86400, "chain": 604800}
-SOURCE_NOTE = {"profile": "AKShare/东方财富", "peers": "AKShare/东方财富", "valuation": "AKShare/乐咕乐股", "financials": "AKShare/财务指标", "chain": "行业模板/预置分析"}
+SOURCE_NOTE = {"profile": "AKShare/同花顺/本地兜底", "peers": "本地A股列表", "valuation": "AKShare/乐咕乐股", "financials": "AKShare/同花顺财务", "chain": "行业模板/预置分析"}
+LOCAL_MARKET_SOURCE = "本地市场数据（参考价）"
+AK_TIMEOUT_SECONDS = 3
+AK_RETRIES = 1
 
 
 def utc_now() -> datetime:
@@ -22,11 +31,11 @@ def utc_now() -> datetime:
 def stamp_payload(payload: Dict[str, Any], endpoint: str, fetched_at: Optional[datetime] = None, cache_age: int = 0, from_cache: bool = False) -> Dict[str, Any]:
     moment = fetched_at or utc_now()
     result = dict(payload)
-    result["data_date"] = moment.date().isoformat()
+    result["data_date"] = payload.get("data_date") or moment.date().isoformat()
     result["fetched_at"] = moment.isoformat()
     result["cache_age"] = cache_age
     result["from_cache"] = from_cache
-    result["source"] = SOURCE_NOTE.get(endpoint, "AKShare")
+    result["source"] = payload.get("source") or SOURCE_NOTE.get(endpoint, "AKShare")
     return result
 
 
@@ -52,12 +61,39 @@ def get_cached_or_fetch(code: str, endpoint: str, fetcher, refresh: bool = False
             return result
         raise
 
+
+@lru_cache(maxsize=1)
+def load_financials_fallback() -> Dict[str, Any]:
+    try:
+        with FINANCIALS_FALLBACK_PATH.open("r", encoding="utf-8") as file:
+            data = json.load(file)
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
 STOCK_FALLBACK = {
     "600058": {"code": "600058", "name": "五矿发展", "industry": "贸易行业", "current_price": None, "change_pct": None},
     "000858": {"code": "000858", "name": "五粮液", "industry": "酿酒行业", "current_price": None, "change_pct": None},
     "002594": {"code": "002594", "name": "比亚迪", "industry": "汽车整车", "current_price": None, "change_pct": None},
     "601058": {"code": "601058", "name": "赛轮轮胎", "industry": "橡胶制品", "current_price": None, "change_pct": None},
 }
+
+
+@lru_cache(maxsize=1)
+def load_stock_data() -> Dict[str, Dict[str, Any]]:
+    if not STOCK_DATA_PATH.exists():
+        return {}
+    try:
+        data = json.loads(STOCK_DATA_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    if not isinstance(data, dict):
+        return {}
+    return {clean_code(code): value for code, value in data.items() if isinstance(value, dict)}
+
+
+def local_stock_item(symbol: str) -> Optional[Dict[str, Any]]:
+    return load_stock_data().get(clean_code(symbol))
 
 
 def _normalize_stock_item(item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -76,7 +112,20 @@ def _normalize_stock_item(item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 
 def _append_missing_fallback(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     existing_codes = {item["code"] for item in items}
-    return items + [item for code, item in STOCK_FALLBACK.items() if code not in existing_codes]
+    local_items = [
+        {
+            "code": code,
+            "name": item.get("name", code),
+            "industry": item.get("industry", "综合行业"),
+            "current_price": item.get("current_price"),
+            "change_pct": item.get("change_pct"),
+        }
+        for code, item in load_stock_data().items()
+        if code not in existing_codes
+    ]
+    existing_codes.update(item["code"] for item in local_items)
+    fallback_items = [item for code, item in STOCK_FALLBACK.items() if code not in existing_codes]
+    return items + local_items + fallback_items
 
 
 def _load_local_a_share_list() -> Optional[List[Dict[str, Any]]]:
@@ -280,13 +329,70 @@ def money_to_yi(value: Any):
     return round(number / 100000000, 2) if abs(number) > 100000000 else round(number, 2)
 
 
+def ak_call(func, *args, **kwargs):
+    last_error = None
+    for _ in range(AK_RETRIES + 1):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(func, *args, **kwargs)
+            try:
+                return future.result(timeout=AK_TIMEOUT_SECONDS)
+            except Exception as exc:
+                last_error = exc
+                future.cancel()
+    raise last_error or TimeoutError("AKShare call timed out")
+
+
+def stock_exchange_symbol(symbol: str) -> str:
+    return ("sh" if symbol.startswith("6") else "sz") + symbol
+
+
+def parse_ths_number(value: Any) -> Optional[float]:
+    if value is None or isinstance(value, bool):
+        return None
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+    text = str(value).strip().replace(",", "")
+    if not text or text.lower() in {"false", "nan", "none", "--", "-"}:
+        return None
+    multiplier = 1.0
+    if text.endswith("万亿"):
+        multiplier = 10000.0
+        text = text[:-2]
+    elif text.endswith("亿"):
+        text = text[:-1]
+    elif text.endswith("万"):
+        multiplier = 0.0001
+        text = text[:-1]
+    if text.endswith("%"):
+        text = text[:-1]
+    try:
+        return round(float(text) * multiplier, 4)
+    except Exception:
+        return None
+
+
+def latest_rows_by_year(frame: pd.DataFrame) -> Dict[int, Dict[str, Any]]:
+    rows: Dict[int, Dict[str, Any]] = {}
+    if frame is None or frame.empty:
+        return rows
+    for _, row in frame.iterrows():
+        date_value = str(first_existing(row, ["报告期", "日期", "公告日期", "截止日期"]) or "")
+        year = int(date_value[:4]) if date_value[:4].isdigit() else None
+        if year:
+            rows[year] = dict(row)
+    return rows
+
+
 @lru_cache(maxsize=1)
 def get_a_share_list() -> List[Dict[str, Any]]:
     local_items = _load_local_a_share_list()
     if local_items:
         return local_items
     try:
-        frame = ak.stock_zh_a_spot_em()
+        frame = ak_call(ak.stock_zh_a_spot) if ak else None
     except Exception:
         return list(STOCK_FALLBACK.values())
     items: List[Dict[str, Any]] = []
@@ -308,53 +414,153 @@ def search_stocks(q: str) -> Dict[str, Any]:
 
 
 def _fetch_stock(symbol: str) -> Dict[str, Any]:
-    spot = next((item for item in get_a_share_list() if item["code"] == symbol), STOCK_FALLBACK.get(symbol, {"code": symbol}))
-    try:
-        info = ak.stock_individual_info_em(symbol=symbol)
-        records = dict(zip(info["item"], info["value"]))
-    except Exception:
-        records = {}
-    industry = records.get("行业") or records.get("所属行业") or spot.get("industry") or "综合行业"
-    name = records.get("股票简称") or records.get("简称") or records.get("名称") or spot.get("name") or symbol
-    return {
+    local = local_stock_item(symbol)
+    local_profile = {
         "code": symbol,
-        "name": name,
-        "industry": industry,
-        "sub_industry": industry,
+        "name": local.get("name") if local else symbol,
+        "industry": local.get("industry") if local else "综合行业",
+        "sub_industry": local.get("industry") if local else "综合行业",
+        "current_price": local.get("current_price") if local else None,
+        "change_pct": local.get("change_pct") if local else None,
+        "market_cap": local.get("market_cap") if local else None,
+        "pe": local.get("pe") if local else None,
+        "pb": local.get("pb") if local else None,
+        "raw": {key: safe_value(value) for key, value in local.items() if key != "financials"} if local else {},
+        "source": LOCAL_MARKET_SOURCE,
+    }
+    spot = next((item for item in get_a_share_list() if item["code"] == symbol), STOCK_FALLBACK.get(symbol, {"code": symbol}))
+    result = dict(local_profile) if local else {
+        "code": symbol,
+        "name": spot.get("name") or symbol,
+        "industry": spot.get("industry") or "综合行业",
+        "sub_industry": spot.get("industry") or "综合行业",
         "current_price": spot.get("current_price"),
         "change_pct": spot.get("change_pct"),
-        "market_cap": safe_value(records.get("总市值")),
-        "raw": {str(key): safe_value(value) for key, value in records.items()},
+        "market_cap": None,
+        "raw": {},
     }
+    try:
+        if ak is None:
+            raise Exception("akshare unavailable")
+        bid_ask = ak_call(ak.stock_bid_ask_em, symbol=stock_exchange_symbol(symbol))
+        if bid_ask is not None and not bid_ask.empty:
+            bid_records = dict(zip(bid_ask.iloc[:, 0], bid_ask.iloc[:, 1]))
+            price = parse_ths_number(bid_records.get("最新") or bid_records.get("最新价"))
+            if price is not None:
+                result["current_price"] = price
+                result["source"] = "AKShare/盘口实时行情"
+                result["raw"] = {str(key): safe_value(value) for key, value in bid_records.items()}
+                return result
+    except Exception:
+        pass
+    if local:
+        return {
+            **result,
+            "source": LOCAL_MARKET_SOURCE,
+        }
+    try:
+        if ak is None:
+            raise Exception("akshare unavailable")
+        hist = ak_call(ak.stock_zh_a_hist, symbol=symbol, period="daily", adjust="")
+        latest = hist.iloc[-1] if hist is not None and not hist.empty else {}
+        result["current_price"] = safe_value(first_existing(latest, ["收盘", "最新价"]))
+        result["change_pct"] = safe_value(first_existing(latest, ["涨跌幅"]))
+        result["source"] = "AKShare/历史行情"
+    except Exception:
+        pass
+    return result
 
 
 def get_stock(code: str, refresh: bool = False) -> Dict[str, Any]:
-    return get_cached_or_fetch(code, "profile", _fetch_stock, refresh)
+    result = get_cached_or_fetch(code, "profile", _fetch_stock, refresh)
+    if result.get("raw", {}).get("data_date"):
+        result["data_date"] = result["raw"]["data_date"]
+    if result.get("raw", {}).get("source") or result.get("source") == "AKShare/东方财富" and local_stock_item(code):
+        result["source"] = LOCAL_MARKET_SOURCE
+    return result
 
 
 def _fetch_financials(symbol: str) -> Dict[str, Any]:
+    local = local_stock_item(symbol)
     try:
-        indicator = ak.stock_financial_analysis_indicator(symbol=symbol)
-        if indicator.empty:
-            indicator = ak.stock_financial_benefit_ths(symbol=symbol, indicator="按年度")
+        if ak is None:
+            raise Exception("akshare unavailable")
+        benefit = ak_call(ak.stock_financial_benefit_ths, symbol=symbol, indicator="按年度")
+        abstract = ak_call(ak.stock_financial_abstract_ths, symbol=symbol, indicator="按年度")
+        cash = ak_call(ak.stock_financial_cash_ths, symbol=symbol, indicator="按年度")
+        benefit_rows = latest_rows_by_year(benefit)
+        abstract_rows = latest_rows_by_year(abstract)
+        cash_rows = latest_rows_by_year(cash)
+        years = sorted(set(benefit_rows) | set(abstract_rows) | set(cash_rows), reverse=True)[:3]
+        items = []
+        for year in years:
+            benefit_row = benefit_rows.get(year, {})
+            abstract_row = abstract_rows.get(year, {})
+            cash_row = cash_rows.get(year, {})
+            items.append({
+                "year": year,
+                "revenue": parse_ths_number(first_existing(benefit_row, ["*营业总收入", "营业总收入", "一、营业总收入"]) or first_existing(abstract_row, ["营业总收入"])),
+                "net_profit": parse_ths_number(first_existing(benefit_row, ["*净利润", "五、净利润", "净利润"]) or first_existing(abstract_row, ["净利润"])),
+                "gross_margin": parse_ths_number(first_existing(abstract_row, ["销售毛利率", "毛利率"])),
+                "net_margin": parse_ths_number(first_existing(abstract_row, ["销售净利率", "净利率"])),
+                "roe": parse_ths_number(first_existing(abstract_row, ["净资产收益率", "净资产收益率-摊薄"])),
+                "eps": parse_ths_number(first_existing(abstract_row, ["基本每股收益"])),
+                "book_value_per_share": parse_ths_number(first_existing(abstract_row, ["每股净资产"])),
+                "revenue_growth": parse_ths_number(first_existing(abstract_row, ["营业总收入同比增长率"])),
+                "net_profit_growth": parse_ths_number(first_existing(abstract_row, ["净利润同比增长率"])),
+                "total_assets": None,
+                "total_debt": None,
+                "operating_cash_flow": parse_ths_number(first_existing(cash_row, ["*经营活动产生的现金流量净额", "经营活动产生的现金流量净额", "间接法-经营活动产生的现金流量净额"])),
+            })
+        if items:
+            return {"code": symbol, "name": local.get("name") if local else None, "items": items, "unit": "亿元", "source": "AKShare/同花顺财务"}
     except Exception:
-        indicator = pd.DataFrame()
-    rows = []
-    for _, row in indicator.head(3).iterrows():
-        date_value = str(first_existing(row, ["日期", "报告期", "公告日期", "截止日期"]) or "")
-        year = int(date_value[:4]) if date_value[:4].isdigit() else None
-        rows.append({
-            "year": year,
-            "revenue": money_to_yi(first_existing(row, ["营业总收入", "营业收入", "主营业务收入"])),
-            "net_profit": money_to_yi(first_existing(row, ["净利润", "归母净利润", "扣非净利润"])),
-            "gross_margin": safe_value(first_existing(row, ["销售毛利率", "毛利率"])),
-            "net_margin": safe_value(first_existing(row, ["销售净利率", "净利率"])),
-            "roe": safe_value(first_existing(row, ["净资产收益率", "加权净资产收益率", "摊薄净资产收益率"])),
-            "total_assets": money_to_yi(first_existing(row, ["资产总计", "总资产"])),
-            "total_debt": money_to_yi(first_existing(row, ["负债合计", "总负债"])),
-            "operating_cash_flow": money_to_yi(first_existing(row, ["经营活动产生的现金流量净额", "每股经营性现金流"])),
-        })
-    return {"code": symbol, "items": rows}
+        pass
+    if local and isinstance(local.get("financials"), list):
+        return {
+            "code": symbol,
+            "name": local.get("name"),
+            "items": [
+                {
+                    "year": item.get("year"),
+                    "revenue": item.get("revenue"),
+                    "net_profit": item.get("net_profit"),
+                    "gross_margin": item.get("gross_margin"),
+                    "net_margin": item.get("net_margin"),
+                    "roe": item.get("roe"),
+                    "total_assets": item.get("total_assets"),
+                    "total_debt": item.get("total_debt"),
+                    "operating_cash_flow": item.get("operating_cash_flow"),
+                }
+                for item in local.get("financials", [])[:3]
+                if isinstance(item, dict)
+            ],
+            "unit": "亿元",
+            "data_date": local.get("data_date"),
+            "source": LOCAL_MARKET_SOURCE,
+        }
+    fallback = load_financials_fallback().get(symbol)
+    if fallback:
+        return {
+            "code": symbol,
+            "name": fallback.get("name"),
+            "items": [
+                {
+                    "year": item.get("year"),
+                    "revenue": item.get("revenue"),
+                    "net_profit": item.get("net_profit"),
+                    "gross_margin": item.get("gross_margin"),
+                    "net_margin": item.get("net_margin"),
+                    "roe": item.get("roe"),
+                    "operating_cash_flow": item.get("cash_flow"),
+                }
+                for item in fallback.get("metrics", [])
+            ],
+            "unit": fallback.get("unit", "亿元"),
+            "data_date": fallback.get("data_date"),
+            "source": "本地财报数据",
+        }
+    return {"code": symbol, "items": [], "unit": "亿元", "source": "无可用财务数据"}
 
 
 def get_financials(code: str, refresh: bool = False) -> Dict[str, Any]:
@@ -364,27 +570,32 @@ def get_financials(code: str, refresh: bool = False) -> Dict[str, Any]:
 def _fetch_peers(symbol: str) -> Dict[str, Any]:
     stock = get_stock(symbol)
     industry = stock.get("industry") or "综合行业"
-    try:
-        peers = ak.stock_board_industry_cons_em(symbol=str(industry))
-    except Exception:
-        peers = pd.DataFrame()
-    items = []
-    for _, row in peers.iterrows():
-        items.append({
-            "code": clean_code(first_existing(row, ["代码", "股票代码"]) or ""),
-            "name": safe_value(first_existing(row, ["名称", "股票简称"])),
-            "price": safe_value(first_existing(row, ["最新价"])),
-            "change_pct": safe_value(first_existing(row, ["涨跌幅"])),
-            "market_cap": money_to_yi(first_existing(row, ["总市值"])),
-            "pe": safe_value(first_existing(row, ["市盈率-动态", "市盈率"])),
-            "pb": safe_value(first_existing(row, ["市净率"])),
-            "revenue": None,
-            "net_profit": None,
-            "roe": None,
+    local_items = []
+    for item in get_a_share_list():
+        if item.get("industry") != industry:
+            continue
+        local_item = local_stock_item(item["code"]) or {}
+        financials = local_item.get("financials") if isinstance(local_item.get("financials"), list) else []
+        latest = financials[0] if financials and isinstance(financials[0], dict) else {}
+        local_items.append({
+            "code": item.get("code"),
+            "name": item.get("name"),
+            "price": item.get("current_price") or local_item.get("current_price"),
+            "change_pct": item.get("change_pct") or local_item.get("change_pct"),
+            "market_cap": local_item.get("market_cap"),
+            "pe": local_item.get("pe"),
+            "pb": local_item.get("pb"),
+            "revenue": latest.get("revenue"),
+            "net_profit": latest.get("net_profit"),
+            "roe": latest.get("roe"),
         })
-    if not items:
-        items = [{"code": stock["code"], "name": stock["name"], "price": stock.get("current_price"), "change_pct": stock.get("change_pct"), "market_cap": money_to_yi(stock.get("market_cap")), "pe": None, "pb": None, "revenue": None, "net_profit": None, "roe": None}]
-    return {"code": stock["code"], "industry": industry, "items": items[:30]}
+        if len(local_items) >= 10:
+            break
+    if local_items:
+        local_items.sort(key=lambda item: (item["code"] != symbol, item["code"]))
+        return {"code": stock["code"], "industry": industry, "items": local_items[:10], "source": "本地A股列表/行业筛选"}
+    items = [{"code": stock["code"], "name": stock["name"], "price": stock.get("current_price"), "change_pct": stock.get("change_pct"), "market_cap": money_to_yi(stock.get("market_cap")), "pe": None, "pb": None, "revenue": None, "net_profit": None, "roe": None}]
+    return {"code": stock["code"], "industry": industry, "items": items, "source": "本地A股列表/单股兜底"}
 
 
 def get_peers(code: str, refresh: bool = False) -> Dict[str, Any]:

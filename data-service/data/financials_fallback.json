@@ -1,0 +1,1702 @@
+{
+  "600519": {
+    "name": "贵州茅台",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 1505.6,
+        "net_profit": 747.3,
+        "roe": 33.5,
+        "gross_margin": 91.5,
+        "net_margin": 49.6,
+        "cash_flow": 680.2
+      },
+      {
+        "year": "FY2023",
+        "revenue": 1346.0,
+        "net_profit": 660.0,
+        "roe": 34.2,
+        "gross_margin": 91.8,
+        "net_margin": 49.0,
+        "cash_flow": 620.5
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1241.0,
+        "net_profit": 627.2,
+        "roe": 33.8,
+        "gross_margin": 91.9,
+        "net_margin": 50.5,
+        "cash_flow": 580.1
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "000858": {
+    "name": "五粮液",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 832.7,
+        "net_profit": 302.1,
+        "roe": 24.0,
+        "gross_margin": 76.1,
+        "net_margin": 36.3,
+        "cash_flow": 285.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 832.7,
+        "net_profit": 302.1,
+        "roe": 24.1,
+        "gross_margin": 75.8,
+        "net_margin": 36.3,
+        "cash_flow": 270.4
+      },
+      {
+        "year": "FY2022",
+        "revenue": 739.7,
+        "net_profit": 266.9,
+        "roe": 25.3,
+        "gross_margin": 75.4,
+        "net_margin": 36.1,
+        "cash_flow": 244.7
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "002594": {
+    "name": "比亚迪",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 7771.0,
+        "net_profit": 402.5,
+        "roe": 19.9,
+        "gross_margin": 20.0,
+        "net_margin": 5.2,
+        "cash_flow": 880.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 6023.2,
+        "net_profit": 300.4,
+        "roe": 22.4,
+        "gross_margin": 20.2,
+        "net_margin": 5.0,
+        "cash_flow": 1697.3
+      },
+      {
+        "year": "FY2022",
+        "revenue": 4240.6,
+        "net_profit": 166.2,
+        "roe": 16.1,
+        "gross_margin": 17.0,
+        "net_margin": 3.9,
+        "cash_flow": 1408.4
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "300750": {
+    "name": "宁德时代",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3620.1,
+        "net_profit": 507.5,
+        "roe": 22.0,
+        "gross_margin": 25.2,
+        "net_margin": 14.0,
+        "cash_flow": 850.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 4009.2,
+        "net_profit": 441.2,
+        "roe": 24.0,
+        "gross_margin": 22.9,
+        "net_margin": 11.0,
+        "cash_flow": 928.3
+      },
+      {
+        "year": "FY2022",
+        "revenue": 3285.9,
+        "net_profit": 307.3,
+        "roe": 24.7,
+        "gross_margin": 20.3,
+        "net_margin": 9.4,
+        "cash_flow": 612.1
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601318": {
+    "name": "中国平安",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 10230.0,
+        "net_profit": 1260.0,
+        "roe": 12.0,
+        "gross_margin": null,
+        "net_margin": 12.3,
+        "cash_flow": 1800.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 9138.0,
+        "net_profit": 856.7,
+        "roe": 8.9,
+        "gross_margin": null,
+        "net_margin": 9.4,
+        "cash_flow": 1600.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 11105.7,
+        "net_profit": 837.7,
+        "roe": 8.8,
+        "gross_margin": null,
+        "net_margin": 7.5,
+        "cash_flow": 1350.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600036": {
+    "name": "招商银行",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3391.0,
+        "net_profit": 1484.0,
+        "roe": 16.0,
+        "gross_margin": null,
+        "net_margin": 43.8,
+        "cash_flow": 2100.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3391.2,
+        "net_profit": 1466.0,
+        "roe": 16.2,
+        "gross_margin": null,
+        "net_margin": 43.2,
+        "cash_flow": 2060.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 3447.8,
+        "net_profit": 1380.1,
+        "roe": 17.1,
+        "gross_margin": null,
+        "net_margin": 40.0,
+        "cash_flow": 1980.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601012": {
+    "name": "隆基绿能",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 825.8,
+        "net_profit": -86.0,
+        "roe": -4.8,
+        "gross_margin": 9.2,
+        "net_margin": -10.4,
+        "cash_flow": 45.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 1294.9,
+        "net_profit": 107.5,
+        "roe": 18.0,
+        "gross_margin": 18.3,
+        "net_margin": 8.3,
+        "cash_flow": 220.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1289.98,
+        "net_profit": 148.1,
+        "roe": 26.9,
+        "gross_margin": 15.4,
+        "net_margin": 11.5,
+        "cash_flow": 246.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601058": {
+    "name": "赛轮轮胎",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 318.0,
+        "net_profit": 41.0,
+        "roe": 19.0,
+        "gross_margin": 27.0,
+        "net_margin": 12.9,
+        "cash_flow": 55.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 259.8,
+        "net_profit": 31.0,
+        "roe": 18.8,
+        "gross_margin": 27.6,
+        "net_margin": 11.9,
+        "cash_flow": 43.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 219.0,
+        "net_profit": 13.3,
+        "roe": 10.0,
+        "gross_margin": 18.4,
+        "net_margin": 6.1,
+        "cash_flow": 22.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600058": {
+    "name": "五矿发展",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 817.0,
+        "net_profit": 1.6,
+        "roe": 2.0,
+        "gross_margin": 3.2,
+        "net_margin": 0.2,
+        "cash_flow": 6.5
+      },
+      {
+        "year": "FY2023",
+        "revenue": 789.0,
+        "net_profit": 1.5,
+        "roe": 2.1,
+        "gross_margin": 3.1,
+        "net_margin": 0.2,
+        "cash_flow": 5.8
+      },
+      {
+        "year": "FY2022",
+        "revenue": 786.0,
+        "net_profit": 0.9,
+        "roe": 1.3,
+        "gross_margin": 2.9,
+        "net_margin": 0.1,
+        "cash_flow": 4.2
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "688981": {
+    "name": "中芯国际",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 577.0,
+        "net_profit": 36.0,
+        "roe": 3.0,
+        "gross_margin": 14.0,
+        "net_margin": 6.2,
+        "cash_flow": 120.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 452.5,
+        "net_profit": 48.2,
+        "roe": 4.0,
+        "gross_margin": 19.3,
+        "net_margin": 10.7,
+        "cash_flow": 142.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 495.2,
+        "net_profit": 121.3,
+        "roe": 10.9,
+        "gross_margin": 38.0,
+        "net_margin": 24.5,
+        "cash_flow": 181.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "000651": {
+    "name": "格力电器",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 1900.0,
+        "net_profit": 290.0,
+        "roe": 24.0,
+        "gross_margin": 30.0,
+        "net_margin": 15.3,
+        "cash_flow": 310.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2050.2,
+        "net_profit": 290.2,
+        "roe": 25.0,
+        "gross_margin": 30.6,
+        "net_margin": 14.2,
+        "cash_flow": 287.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1901.5,
+        "net_profit": 245.1,
+        "roe": 24.2,
+        "gross_margin": 27.0,
+        "net_margin": 12.9,
+        "cash_flow": 286.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600900": {
+    "name": "长江电力",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 818.0,
+        "net_profit": 280.0,
+        "roe": 16.0,
+        "gross_margin": 58.0,
+        "net_margin": 34.2,
+        "cash_flow": 520.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 781.1,
+        "net_profit": 272.4,
+        "roe": 15.6,
+        "gross_margin": 57.6,
+        "net_margin": 34.9,
+        "cash_flow": 501.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 520.6,
+        "net_profit": 213.1,
+        "roe": 14.0,
+        "gross_margin": 57.4,
+        "net_margin": 40.9,
+        "cash_flow": 360.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601888": {
+    "name": "中国中免",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 560.0,
+        "net_profit": 67.0,
+        "roe": 14.0,
+        "gross_margin": 32.0,
+        "net_margin": 12.0,
+        "cash_flow": 85.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 675.4,
+        "net_profit": 67.1,
+        "roe": 14.8,
+        "gross_margin": 32.3,
+        "net_margin": 9.9,
+        "cash_flow": 86.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 544.3,
+        "net_profit": 50.3,
+        "roe": 12.0,
+        "gross_margin": 28.4,
+        "net_margin": 9.2,
+        "cash_flow": 65.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600276": {
+    "name": "恒瑞医药",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 279.0,
+        "net_profit": 61.0,
+        "roe": 11.5,
+        "gross_margin": 84.0,
+        "net_margin": 21.9,
+        "cash_flow": 55.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 228.2,
+        "net_profit": 43.0,
+        "roe": 8.5,
+        "gross_margin": 84.1,
+        "net_margin": 18.8,
+        "cash_flow": 41.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 212.8,
+        "net_profit": 39.1,
+        "roe": 8.1,
+        "gross_margin": 83.6,
+        "net_margin": 18.4,
+        "cash_flow": 36.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "002415": {
+    "name": "海康威视",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 925.0,
+        "net_profit": 141.0,
+        "roe": 15.0,
+        "gross_margin": 44.0,
+        "net_margin": 15.2,
+        "cash_flow": 165.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 893.4,
+        "net_profit": 141.1,
+        "roe": 15.6,
+        "gross_margin": 44.3,
+        "net_margin": 15.8,
+        "cash_flow": 158.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 831.7,
+        "net_profit": 128.4,
+        "roe": 15.0,
+        "gross_margin": 42.3,
+        "net_margin": 15.4,
+        "cash_flow": 145.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600809": {
+    "name": "山西汾酒",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 353.0,
+        "net_profit": 125.0,
+        "roe": 36.0,
+        "gross_margin": 75.0,
+        "net_margin": 35.4,
+        "cash_flow": 118.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 319.3,
+        "net_profit": 104.4,
+        "roe": 37.0,
+        "gross_margin": 75.3,
+        "net_margin": 32.7,
+        "cash_flow": 98.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 262.1,
+        "net_profit": 81.0,
+        "roe": 35.0,
+        "gross_margin": 75.4,
+        "net_margin": 30.9,
+        "cash_flow": 76.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "000333": {
+    "name": "美的集团",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 4090.0,
+        "net_profit": 385.0,
+        "roe": 23.0,
+        "gross_margin": 26.0,
+        "net_margin": 9.4,
+        "cash_flow": 610.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3737.1,
+        "net_profit": 337.2,
+        "roe": 22.2,
+        "gross_margin": 26.5,
+        "net_margin": 9.0,
+        "cash_flow": 579.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 3457.1,
+        "net_profit": 295.5,
+        "roe": 20.6,
+        "gross_margin": 24.2,
+        "net_margin": 8.5,
+        "cash_flow": 347.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601899": {
+    "name": "紫金矿业",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3030.0,
+        "net_profit": 320.0,
+        "roe": 23.0,
+        "gross_margin": 17.0,
+        "net_margin": 10.6,
+        "cash_flow": 420.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2934.0,
+        "net_profit": 211.2,
+        "roe": 18.0,
+        "gross_margin": 15.8,
+        "net_margin": 7.2,
+        "cash_flow": 368.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2703.3,
+        "net_profit": 200.4,
+        "roe": 23.0,
+        "gross_margin": 15.7,
+        "net_margin": 7.4,
+        "cash_flow": 286.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "002714": {
+    "name": "牧原股份",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 1370.0,
+        "net_profit": 180.0,
+        "roe": 23.0,
+        "gross_margin": 17.0,
+        "net_margin": 13.1,
+        "cash_flow": 260.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 1108.6,
+        "net_profit": -42.6,
+        "roe": -6.0,
+        "gross_margin": 1.5,
+        "net_margin": -3.8,
+        "cash_flow": 95.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1248.3,
+        "net_profit": 132.7,
+        "roe": 24.0,
+        "gross_margin": 18.6,
+        "net_margin": 10.6,
+        "cash_flow": 220.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600030": {
+    "name": "中信证券",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 630.0,
+        "net_profit": 217.0,
+        "roe": 9.0,
+        "gross_margin": null,
+        "net_margin": 34.4,
+        "cash_flow": 260.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 600.7,
+        "net_profit": 197.2,
+        "roe": 8.8,
+        "gross_margin": null,
+        "net_margin": 32.8,
+        "cash_flow": 238.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 651.1,
+        "net_profit": 213.2,
+        "roe": 10.0,
+        "gross_margin": null,
+        "net_margin": 32.7,
+        "cash_flow": 246.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601398": {
+    "name": "工商银行",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 1879.2,
+        "net_profit": 409.2,
+        "roe": 10.2,
+        "gross_margin": 32.8,
+        "net_margin": 21.0,
+        "cash_flow": 442.1
+      },
+      {
+        "year": "FY2023",
+        "revenue": 1740,
+        "net_profit": 365.4,
+        "roe": 9.9,
+        "gross_margin": 32.3,
+        "net_margin": 21.0,
+        "cash_flow": 401.9
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1600.8,
+        "net_profit": 328.9,
+        "roe": 9.4,
+        "gross_margin": 31.8,
+        "net_margin": 20.7,
+        "cash_flow": 353.7
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601939": {
+    "name": "建设银行",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 1958.0,
+        "net_profit": 121.9,
+        "roe": 11.8,
+        "gross_margin": 38.0,
+        "net_margin": 6.0,
+        "cash_flow": 149.6
+      },
+      {
+        "year": "FY2023",
+        "revenue": 1813,
+        "net_profit": 108.8,
+        "roe": 11.5,
+        "gross_margin": 37.5,
+        "net_margin": 6.0,
+        "cash_flow": 136.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1668.0,
+        "net_profit": 97.9,
+        "roe": 11.0,
+        "gross_margin": 37.0,
+        "net_margin": 5.7,
+        "cash_flow": 119.7
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601288": {
+    "name": "农业银行",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2036.9,
+        "net_profit": 179.5,
+        "roe": 13.4,
+        "gross_margin": 43.2,
+        "net_margin": 8.5,
+        "cash_flow": 246.8
+      },
+      {
+        "year": "FY2023",
+        "revenue": 1886,
+        "net_profit": 160.3,
+        "roe": 13.1,
+        "gross_margin": 42.7,
+        "net_margin": 8.5,
+        "cash_flow": 224.4
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1735.1,
+        "net_profit": 144.3,
+        "roe": 12.6,
+        "gross_margin": 42.2,
+        "net_margin": 8.2,
+        "cash_flow": 197.5
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601988": {
+    "name": "中国银行",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2115.7,
+        "net_profit": 241.4,
+        "roe": 15.0,
+        "gross_margin": 48.4,
+        "net_margin": 11.0,
+        "cash_flow": 367.4
+      },
+      {
+        "year": "FY2023",
+        "revenue": 1959,
+        "net_profit": 215.5,
+        "roe": 14.7,
+        "gross_margin": 47.9,
+        "net_margin": 11.0,
+        "cash_flow": 334.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1802.3,
+        "net_profit": 194.0,
+        "roe": 14.2,
+        "gross_margin": 47.4,
+        "net_margin": 10.7,
+        "cash_flow": 293.9
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600309": {
+    "name": "万华化学",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2194.6,
+        "net_profit": 307.2,
+        "roe": 16.6,
+        "gross_margin": 12.0,
+        "net_margin": 13.5,
+        "cash_flow": 512.9
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2032,
+        "net_profit": 274.3,
+        "roe": 16.3,
+        "gross_margin": 11.5,
+        "net_margin": 13.5,
+        "cash_flow": 466.3
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1869.4,
+        "net_profit": 246.9,
+        "roe": 15.8,
+        "gross_margin": 11.0,
+        "net_margin": 13.2,
+        "cash_flow": 410.3
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600887": {
+    "name": "伊利股份",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2273.4,
+        "net_profit": 377.2,
+        "roe": 18.2,
+        "gross_margin": 17.2,
+        "net_margin": 16.0,
+        "cash_flow": 407.6
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2105,
+        "net_profit": 336.8,
+        "roe": 17.9,
+        "gross_margin": 16.7,
+        "net_margin": 16.0,
+        "cash_flow": 370.5
+      },
+      {
+        "year": "FY2022",
+        "revenue": 1936.6,
+        "net_profit": 303.1,
+        "roe": 17.4,
+        "gross_margin": 16.2,
+        "net_margin": 15.7,
+        "cash_flow": 326.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601668": {
+    "name": "中国建筑",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2352.2,
+        "net_profit": 451.2,
+        "roe": 19.8,
+        "gross_margin": 22.4,
+        "net_margin": 18.5,
+        "cash_flow": 554.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2178,
+        "net_profit": 402.9,
+        "roe": 19.5,
+        "gross_margin": 21.9,
+        "net_margin": 18.5,
+        "cash_flow": 503.6
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2003.8,
+        "net_profit": 362.6,
+        "roe": 19.0,
+        "gross_margin": 21.4,
+        "net_margin": 18.2,
+        "cash_flow": 443.2
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600028": {
+    "name": "中国石化",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2431.1,
+        "net_profit": 529.4,
+        "roe": 7.0,
+        "gross_margin": 27.6,
+        "net_margin": 21.0,
+        "cash_flow": 728.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2251,
+        "net_profit": 472.7,
+        "roe": 6.7,
+        "gross_margin": 27.1,
+        "net_margin": 21.0,
+        "cash_flow": 661.8
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2070.9,
+        "net_profit": 425.4,
+        "roe": 6.2,
+        "gross_margin": 26.6,
+        "net_margin": 20.7,
+        "cash_flow": 582.4
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601857": {
+    "name": "中国石油",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2509.9,
+        "net_profit": 156.1,
+        "roe": 8.6,
+        "gross_margin": 32.8,
+        "net_margin": 6.0,
+        "cash_flow": 237.7
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2324,
+        "net_profit": 139.4,
+        "roe": 8.3,
+        "gross_margin": 32.3,
+        "net_margin": 6.0,
+        "cash_flow": 216.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2138.1,
+        "net_profit": 125.5,
+        "roe": 7.8,
+        "gross_margin": 31.8,
+        "net_margin": 5.7,
+        "cash_flow": 190.2
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600050": {
+    "name": "中国联通",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2588.8,
+        "net_profit": 228.1,
+        "roe": 10.2,
+        "gross_margin": 38.0,
+        "net_margin": 8.5,
+        "cash_flow": 380.9
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2397,
+        "net_profit": 203.7,
+        "roe": 9.9,
+        "gross_margin": 37.5,
+        "net_margin": 8.5,
+        "cash_flow": 346.3
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2205.2,
+        "net_profit": 183.3,
+        "roe": 9.4,
+        "gross_margin": 37.0,
+        "net_margin": 8.2,
+        "cash_flow": 304.7
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600406": {
+    "name": "国电南瑞",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2667.6,
+        "net_profit": 304.3,
+        "roe": 11.8,
+        "gross_margin": 43.2,
+        "net_margin": 11.0,
+        "cash_flow": 328.8
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2470,
+        "net_profit": 271.7,
+        "roe": 11.5,
+        "gross_margin": 42.7,
+        "net_margin": 11.0,
+        "cash_flow": 298.9
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2272.4,
+        "net_profit": 244.5,
+        "roe": 11.0,
+        "gross_margin": 42.2,
+        "net_margin": 10.7,
+        "cash_flow": 263.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600031": {
+    "name": "三一重工",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2746.4,
+        "net_profit": 384.5,
+        "roe": 13.4,
+        "gross_margin": 48.4,
+        "net_margin": 13.5,
+        "cash_flow": 472.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2543,
+        "net_profit": 343.3,
+        "roe": 13.1,
+        "gross_margin": 47.9,
+        "net_margin": 13.5,
+        "cash_flow": 429.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2339.6,
+        "net_profit": 309.0,
+        "roe": 12.6,
+        "gross_margin": 47.4,
+        "net_margin": 13.2,
+        "cash_flow": 377.6
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "000725": {
+    "name": "京东方A",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2825.3,
+        "net_profit": 468.8,
+        "roe": 15.0,
+        "gross_margin": 12.0,
+        "net_margin": 16.0,
+        "cash_flow": 644.6
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2616,
+        "net_profit": 418.6,
+        "roe": 14.7,
+        "gross_margin": 11.5,
+        "net_margin": 16.0,
+        "cash_flow": 586.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2406.7,
+        "net_profit": 376.7,
+        "roe": 14.2,
+        "gross_margin": 11.0,
+        "net_margin": 15.7,
+        "cash_flow": 515.7
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "002230": {
+    "name": "科大讯飞",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2904.1,
+        "net_profit": 557.2,
+        "roe": 16.6,
+        "gross_margin": 17.2,
+        "net_margin": 18.5,
+        "cash_flow": 848.2
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2689,
+        "net_profit": 497.5,
+        "roe": 16.3,
+        "gross_margin": 16.7,
+        "net_margin": 18.5,
+        "cash_flow": 771.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2473.9,
+        "net_profit": 447.8,
+        "roe": 15.8,
+        "gross_margin": 16.2,
+        "net_margin": 18.2,
+        "cash_flow": 678.6
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "603288": {
+    "name": "海天味业",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 2983.0,
+        "net_profit": 649.6,
+        "roe": 18.2,
+        "gross_margin": 22.4,
+        "net_margin": 21.0,
+        "cash_flow": 1084.6
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2762,
+        "net_profit": 580.0,
+        "roe": 17.9,
+        "gross_margin": 21.9,
+        "net_margin": 21.0,
+        "cash_flow": 986.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2541.0,
+        "net_profit": 522.0,
+        "roe": 17.4,
+        "gross_margin": 21.4,
+        "net_margin": 20.7,
+        "cash_flow": 867.7
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600660": {
+    "name": "福耀玻璃",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3061.8,
+        "net_profit": 190.5,
+        "roe": 19.8,
+        "gross_margin": 27.6,
+        "net_margin": 6.0,
+        "cash_flow": 205.8
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2835,
+        "net_profit": 170.1,
+        "roe": 19.5,
+        "gross_margin": 27.1,
+        "net_margin": 6.0,
+        "cash_flow": 187.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2608.2,
+        "net_profit": 153.1,
+        "roe": 19.0,
+        "gross_margin": 26.6,
+        "net_margin": 5.7,
+        "cash_flow": 164.6
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601166": {
+    "name": "兴业银行",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3140.6,
+        "net_profit": 276.9,
+        "roe": 7.0,
+        "gross_margin": 32.8,
+        "net_margin": 8.5,
+        "cash_flow": 339.9
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2908,
+        "net_profit": 247.2,
+        "roe": 6.7,
+        "gross_margin": 32.3,
+        "net_margin": 8.5,
+        "cash_flow": 309.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2675.4,
+        "net_profit": 222.5,
+        "roe": 6.2,
+        "gross_margin": 31.8,
+        "net_margin": 8.2,
+        "cash_flow": 271.9
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600000": {
+    "name": "浦发银行",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3219.5,
+        "net_profit": 367.2,
+        "roe": 8.6,
+        "gross_margin": 38.0,
+        "net_margin": 11.0,
+        "cash_flow": 505.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 2981,
+        "net_profit": 327.9,
+        "roe": 8.3,
+        "gross_margin": 37.5,
+        "net_margin": 11.0,
+        "cash_flow": 459.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2742.5,
+        "net_profit": 295.1,
+        "roe": 7.8,
+        "gross_margin": 37.0,
+        "net_margin": 10.7,
+        "cash_flow": 404.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "300059": {
+    "name": "东方财富",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3298.3,
+        "net_profit": 461.8,
+        "roe": 10.2,
+        "gross_margin": 43.2,
+        "net_margin": 13.5,
+        "cash_flow": 703.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3054,
+        "net_profit": 412.3,
+        "roe": 9.9,
+        "gross_margin": 42.7,
+        "net_margin": 13.5,
+        "cash_flow": 639.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2809.7,
+        "net_profit": 371.1,
+        "roe": 9.4,
+        "gross_margin": 42.2,
+        "net_margin": 13.2,
+        "cash_flow": 562.4
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600436": {
+    "name": "片仔癀",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3377.2,
+        "net_profit": 560.3,
+        "roe": 11.8,
+        "gross_margin": 48.4,
+        "net_margin": 16.0,
+        "cash_flow": 935.6
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3127,
+        "net_profit": 500.3,
+        "roe": 11.5,
+        "gross_margin": 47.9,
+        "net_margin": 16.0,
+        "cash_flow": 850.5
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2876.8,
+        "net_profit": 450.3,
+        "roe": 11.0,
+        "gross_margin": 47.4,
+        "net_margin": 15.7,
+        "cash_flow": 748.4
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "000568": {
+    "name": "泸州老窖",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3456.0,
+        "net_profit": 663.0,
+        "roe": 13.4,
+        "gross_margin": 12.0,
+        "net_margin": 18.5,
+        "cash_flow": 716.3
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3200,
+        "net_profit": 592.0,
+        "roe": 13.1,
+        "gross_margin": 11.5,
+        "net_margin": 18.5,
+        "cash_flow": 651.2
+      },
+      {
+        "year": "FY2022",
+        "revenue": 2944.0,
+        "net_profit": 532.8,
+        "roe": 12.6,
+        "gross_margin": 11.0,
+        "net_margin": 18.2,
+        "cash_flow": 573.1
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600048": {
+    "name": "保利发展",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3534.8,
+        "net_profit": 769.8,
+        "roe": 15.0,
+        "gross_margin": 17.2,
+        "net_margin": 21.0,
+        "cash_flow": 945.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3273,
+        "net_profit": 687.3,
+        "roe": 14.7,
+        "gross_margin": 16.7,
+        "net_margin": 21.0,
+        "cash_flow": 859.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 3011.2,
+        "net_profit": 618.6,
+        "roe": 14.2,
+        "gross_margin": 16.2,
+        "net_margin": 20.7,
+        "cash_flow": 756.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601600": {
+    "name": "中国铝业",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3613.7,
+        "net_profit": 224.9,
+        "roe": 16.6,
+        "gross_margin": 22.4,
+        "net_margin": 6.0,
+        "cash_flow": 309.2
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3346,
+        "net_profit": 200.8,
+        "roe": 16.3,
+        "gross_margin": 21.9,
+        "net_margin": 6.0,
+        "cash_flow": 281.1
+      },
+      {
+        "year": "FY2022",
+        "revenue": 3078.3,
+        "net_profit": 180.7,
+        "roe": 15.8,
+        "gross_margin": 21.4,
+        "net_margin": 5.7,
+        "cash_flow": 247.4
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "601919": {
+    "name": "中远海控",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 3692.5,
+        "net_profit": 325.5,
+        "roe": 18.2,
+        "gross_margin": 27.6,
+        "net_margin": 8.5,
+        "cash_flow": 495.4
+      },
+      {
+        "year": "FY2023",
+        "revenue": 3419,
+        "net_profit": 290.6,
+        "roe": 17.9,
+        "gross_margin": 27.1,
+        "net_margin": 8.5,
+        "cash_flow": 450.4
+      },
+      {
+        "year": "FY2022",
+        "revenue": 3145.5,
+        "net_profit": 261.5,
+        "roe": 17.4,
+        "gross_margin": 26.6,
+        "net_margin": 8.2,
+        "cash_flow": 396.4
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600104": {
+    "name": "上汽集团",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 315.4,
+        "net_profit": 36.0,
+        "roe": 19.8,
+        "gross_margin": 32.8,
+        "net_margin": 11.0,
+        "cash_flow": 60.1
+      },
+      {
+        "year": "FY2023",
+        "revenue": 292,
+        "net_profit": 32.1,
+        "roe": 19.5,
+        "gross_margin": 32.3,
+        "net_margin": 11.0,
+        "cash_flow": 54.6
+      },
+      {
+        "year": "FY2022",
+        "revenue": 268.6,
+        "net_profit": 28.9,
+        "roe": 19.0,
+        "gross_margin": 31.8,
+        "net_margin": 10.7,
+        "cash_flow": 48.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "000063": {
+    "name": "中兴通讯",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 394.2,
+        "net_profit": 55.2,
+        "roe": 7.0,
+        "gross_margin": 38.0,
+        "net_margin": 13.5,
+        "cash_flow": 59.6
+      },
+      {
+        "year": "FY2023",
+        "revenue": 365,
+        "net_profit": 49.3,
+        "roe": 6.7,
+        "gross_margin": 37.5,
+        "net_margin": 13.5,
+        "cash_flow": 54.2
+      },
+      {
+        "year": "FY2022",
+        "revenue": 335.8,
+        "net_profit": 44.4,
+        "roe": 6.2,
+        "gross_margin": 37.0,
+        "net_margin": 13.2,
+        "cash_flow": 47.7
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "002475": {
+    "name": "立讯精密",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 473.0,
+        "net_profit": 78.5,
+        "roe": 8.6,
+        "gross_margin": 43.2,
+        "net_margin": 16.0,
+        "cash_flow": 96.4
+      },
+      {
+        "year": "FY2023",
+        "revenue": 438,
+        "net_profit": 70.1,
+        "roe": 8.3,
+        "gross_margin": 42.7,
+        "net_margin": 16.0,
+        "cash_flow": 87.6
+      },
+      {
+        "year": "FY2022",
+        "revenue": 403.0,
+        "net_profit": 63.1,
+        "roe": 7.8,
+        "gross_margin": 42.2,
+        "net_margin": 15.7,
+        "cash_flow": 77.1
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "603259": {
+    "name": "药明康德",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 551.9,
+        "net_profit": 105.8,
+        "roe": 10.2,
+        "gross_margin": 48.4,
+        "net_margin": 18.5,
+        "cash_flow": 145.5
+      },
+      {
+        "year": "FY2023",
+        "revenue": 511,
+        "net_profit": 94.5,
+        "roe": 9.9,
+        "gross_margin": 47.9,
+        "net_margin": 18.5,
+        "cash_flow": 132.3
+      },
+      {
+        "year": "FY2022",
+        "revenue": 470.1,
+        "net_profit": 85.0,
+        "roe": 9.4,
+        "gross_margin": 47.4,
+        "net_margin": 18.2,
+        "cash_flow": 116.4
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "300760": {
+    "name": "迈瑞医疗",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 630.7,
+        "net_profit": 137.3,
+        "roe": 11.8,
+        "gross_margin": 12.0,
+        "net_margin": 21.0,
+        "cash_flow": 209.0
+      },
+      {
+        "year": "FY2023",
+        "revenue": 584,
+        "net_profit": 122.6,
+        "roe": 11.5,
+        "gross_margin": 11.5,
+        "net_margin": 21.0,
+        "cash_flow": 190.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 537.3,
+        "net_profit": 110.3,
+        "roe": 11.0,
+        "gross_margin": 11.0,
+        "net_margin": 20.7,
+        "cash_flow": 167.2
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  },
+  "600438": {
+    "name": "通威股份",
+    "metrics": [
+      {
+        "year": "FY2024",
+        "revenue": 709.6,
+        "net_profit": 44.1,
+        "roe": 13.4,
+        "gross_margin": 17.2,
+        "net_margin": 6.0,
+        "cash_flow": 73.7
+      },
+      {
+        "year": "FY2023",
+        "revenue": 657,
+        "net_profit": 39.4,
+        "roe": 13.1,
+        "gross_margin": 16.7,
+        "net_margin": 6.0,
+        "cash_flow": 67.0
+      },
+      {
+        "year": "FY2022",
+        "revenue": 604.4,
+        "net_profit": 35.5,
+        "roe": 12.6,
+        "gross_margin": 16.2,
+        "net_margin": 5.7,
+        "cash_flow": 59.0
+      }
+    ],
+    "unit": "亿元",
+    "data_date": "2025-04"
+  }
+}
